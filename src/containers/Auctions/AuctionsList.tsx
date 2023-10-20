@@ -110,10 +110,14 @@ const AuctionsList = ({ type, selectedItem, setSelectedItem }: Props) => {
                 <Loader text="Loading..." />
             ) : auctions.length > 0 ? (
                 <>
-                    {auctions.slice(paging.from, paging.to).map((auction, i: number) => (
+                    {/* {auctions.slice(paging.from, paging.to).map((auction, i: number) => (
+                    <AuctionBlock key={auction.auctionId} {...{ ...auction, isCollapsed: i !== 0 }} />
+                ))}
+                <Pagination items={auctions} perPage={5} handlePagingMargin={setPaging} /> */}
+
+                    {auctions.map((auction, i: number) => (
                         <AuctionBlock key={auction.auctionId} {...{ ...auction, isCollapsed: i !== 0 }} />
                     ))}
-                    <Pagination items={auctions} perPage={5} handlePagingMargin={setPaging} />
                 </>
             ) : (
                 <NoData>

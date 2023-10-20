@@ -17,6 +17,9 @@ import {
     handleClaimInternalBalance,
     IAuctionBuy,
     IClaimInternalBalance,
+    getCollateralAuctions,
+    getDebtAuctions,
+    getSurplusAuctions,
 } from '~/utils'
 import { IAuctionBid, IAuction, AuctionEventType } from '~/types'
 import { StoreModel } from '~/model'
@@ -99,8 +102,11 @@ const auctionModel: AuctionModel = {
     collateralAuctions: {},
     debtAuctions: null,
     fetchAuctions: thunk(async (actions, { geb, type, tokenSymbol }) => {
+        const latestBlock = await geb.provider.getBlockNumber()
+        const blockAmount = 100000
         if (type === 'SURPLUS') {
-            const surplusAuctionsFetched = await geb.auctions.getSurplusAuctions(0)
+            // const surplusAuctionsFetched = await geb.auctions.getSurplusAuctions(latestBlock - blockAmount, latestBlock)
+            const surplusAuctionsFetched = await getSurplusAuctions(geb, latestBlock - blockAmount, latestBlock)
             const surplusAuctions = surplusAuctionsFetched.auctions.map((auction) => {
                 return {
                     ...auction,
@@ -113,7 +119,8 @@ const auctionModel: AuctionModel = {
                 actions.setSurplusAuctions(surplusAuctions)
             }
         } else if (type === 'DEBT') {
-            const debtAuctionsFetched = await geb.auctions.getDebtAuctions(0)
+            // const debtAuctionsFetched = await geb.auctions.getDebtAuctions(latestBlock - blockAmount, latestBlock)
+            const debtAuctionsFetched = await getDebtAuctions(geb, latestBlock - blockAmount, latestBlock)
             const debtAuctions = debtAuctionsFetched.auctions.map((auction) => {
                 return {
                     ...auction,
@@ -126,7 +133,17 @@ const auctionModel: AuctionModel = {
                 actions.setDebtAuctions(debtAuctions)
             }
         } else if (type === 'COLLATERAL') {
-            const collateralAuctionsFetched = await geb.auctions.getCollateralAuctions(0, tokenSymbol || 'WETH')
+            // const collateralAuctionsFetched = await geb.auctions.getCollateralAuctions(
+            //     tokenSymbol || 'WETH',
+            //     latestBlock - blockAmount,
+            //     latestBlock
+            // )
+            const collateralAuctionsFetched = await getCollateralAuctions(
+                geb,
+                tokenSymbol || 'WETH',
+                latestBlock - blockAmount,
+                latestBlock
+            )
 
             const collateralAuctions = collateralAuctionsFetched.auctions.map((auction) => {
                 return {
