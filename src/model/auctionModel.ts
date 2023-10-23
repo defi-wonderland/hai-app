@@ -2,7 +2,6 @@ import { action, Action, thunk, Thunk } from 'easy-peasy'
 
 import {
     Geb,
-    ISurplusAuction as SDKAuction,
     ICollateralAuction,
     AuctionData,
     fetchAuctionData,
@@ -20,12 +19,25 @@ import {
     getCollateralAuctions,
     getDebtAuctions,
     getSurplusAuctions,
+    formatSurplusAndDebtAuctions,
+    formatCollateralAuctions,
 } from '~/utils'
-import { IAuctionBid, IAuction, AuctionEventType } from '~/types'
+import { IAuctionBid, IAuction, AuctionEventType, LoadingAuctionsData } from '~/types'
 import { StoreModel } from '~/model'
 
 export interface AuctionModel {
-    fetchAuctions: Thunk<AuctionModel, { geb: Geb; type: AuctionEventType; tokenSymbol?: string }>
+    fetchAuctions: Thunk<
+        AuctionModel,
+        {
+            geb: Geb
+            type: AuctionEventType
+            tokenSymbol?: string
+            startBlock?: number
+            loadedAuctions?: any[]
+            loadingAuctionsData?: LoadingAuctionsData
+            userProxy?: string
+        }
+    >
 
     amount: string
     setAmount: Action<AuctionModel, string>
@@ -75,11 +87,11 @@ export interface AuctionModel {
     setAuctionsData: Action<AuctionModel, AuctionData>
     fetchAuctionsData: Thunk<AuctionModel, { geb: Geb; proxyAddress: string }, StoreModel>
 
-    surplusAuctions: SDKAuction[] | null
-    setSurplusAuctions: Action<AuctionModel, SDKAuction[] | null>
+    surplusAuctions: IAuction[] | undefined
+    setSurplusAuctions: Action<AuctionModel, IAuction[] | undefined>
 
-    debtAuctions: SDKAuction[] | null
-    setDebtAuctions: Action<AuctionModel, SDKAuction[] | null>
+    debtAuctions: IAuction[] | undefined
+    setDebtAuctions: Action<AuctionModel, IAuction[] | undefined>
 
     collateralAuctions: { [key: string]: ICollateralAuction[] }
     setCollateralAuctions: Action<AuctionModel, { collateral: string; auctions: ICollateralAuction[] }>
@@ -95,71 +107,95 @@ export interface AuctionModel {
         },
         CollateralAuctionsData[]
     >
+
+    loadingAuctionsData: LoadingAuctionsData
+    setLoadingAuctionsData: Action<AuctionModel, LoadingAuctionsData>
 }
 
 const auctionModel: AuctionModel = {
-    surplusAuctions: null,
+    surplusAuctions: undefined,
+    debtAuctions: undefined,
     collateralAuctions: {},
-    debtAuctions: null,
-    fetchAuctions: thunk(async (actions, { geb, type, tokenSymbol }) => {
-        const latestBlock = await geb.provider.getBlockNumber()
-        const blockAmount = 100000
-        if (type === 'SURPLUS') {
-            // const surplusAuctionsFetched = await geb.auctions.getSurplusAuctions(latestBlock - blockAmount, latestBlock)
-            const surplusAuctionsFetched = await getSurplusAuctions(geb, latestBlock - blockAmount, latestBlock)
-            const surplusAuctions = surplusAuctionsFetched.auctions.map((auction) => {
-                return {
-                    ...auction,
-                    englishAuctionType: 'SURPLUS',
-                    sellToken: 'COIN',
-                    buyToken: 'PROTOCOL_TOKEN',
-                }
+    fetchAuctions: thunk(
+        async (
+            actions,
+            { geb, type, tokenSymbol, startBlock, loadedAuctions = [], loadingAuctionsData = {}, userProxy = '' }
+        ) => {
+            const latestBlock = startBlock || (await geb.provider.getBlockNumber())
+            actions.setLoadingAuctionsData({
+                ...loadingAuctionsData,
+                loading: true,
             })
-            if (surplusAuctions) {
-                actions.setSurplusAuctions(surplusAuctions)
-            }
-        } else if (type === 'DEBT') {
-            // const debtAuctionsFetched = await geb.auctions.getDebtAuctions(latestBlock - blockAmount, latestBlock)
-            const debtAuctionsFetched = await getDebtAuctions(geb, latestBlock - blockAmount, latestBlock)
-            const debtAuctions = debtAuctionsFetched.auctions.map((auction) => {
-                return {
-                    ...auction,
-                    englishAuctionType: 'DEBT',
-                    sellToken: 'PROTOCOL_TOKEN',
-                    buyToken: 'COIN',
+            const blockAmount = 100000
+            if (type === 'SURPLUS') {
+                const { auctions, endBlock } = await getSurplusAuctions(geb, latestBlock - blockAmount, latestBlock)
+                const surplusAuctions = auctions.reverse().map((auction) => {
+                    return {
+                        ...auction,
+                        englishAuctionType: 'SURPLUS',
+                        sellToken: 'COIN',
+                        buyToken: 'PROTOCOL_TOKEN',
+                    }
+                })
+                if (surplusAuctions) {
+                    const formattedAuctions = formatSurplusAndDebtAuctions(surplusAuctions, userProxy)
+                    actions.setSurplusAuctions([...loadedAuctions, ...formattedAuctions])
+                    actions.setLoadingAuctionsData({
+                        surplusStartBlock: endBlock,
+                        loading: false,
+                    })
                 }
-            })
-            if (debtAuctions) {
-                actions.setDebtAuctions(debtAuctions)
-            }
-        } else if (type === 'COLLATERAL') {
-            // const collateralAuctionsFetched = await geb.auctions.getCollateralAuctions(
-            //     tokenSymbol || 'WETH',
-            //     latestBlock - blockAmount,
-            //     latestBlock
-            // )
-            const collateralAuctionsFetched = await getCollateralAuctions(
-                geb,
-                tokenSymbol || 'WETH',
-                latestBlock - blockAmount,
-                latestBlock
-            )
+            } else if (type === 'DEBT') {
+                const { auctions, endBlock } = await getDebtAuctions(geb, latestBlock - blockAmount, latestBlock)
+                const debtAuctions = auctions.reverse().map((auction) => {
+                    return {
+                        ...auction,
+                        englishAuctionType: 'DEBT',
+                        sellToken: 'PROTOCOL_TOKEN',
+                        buyToken: 'COIN',
+                    }
+                })
+                if (debtAuctions) {
+                    const formattedAuctions = formatSurplusAndDebtAuctions(debtAuctions, userProxy)
+                    actions.setDebtAuctions([...loadedAuctions, ...formattedAuctions])
+                    actions.setLoadingAuctionsData({
+                        debtStartBlock: endBlock,
+                        loading: false,
+                    })
+                }
+            } else if (type === 'COLLATERAL') {
+                const { auctions, endBlock } = await getCollateralAuctions(
+                    geb,
+                    tokenSymbol || 'WETH',
+                    latestBlock - blockAmount,
+                    latestBlock
+                )
 
-            const collateralAuctions = collateralAuctionsFetched.auctions.map((auction) => {
-                return {
-                    ...auction,
-                    englishAuctionType: 'COLLATERAL',
-                    sellToken: 'PROTOCOL_TOKEN',
-                    buyToken: 'COIN',
-                    tokenSymbol: tokenSymbol,
-                    auctionDeadline: '1699122709',
+                const collateralAuctions = auctions.reverse().map((auction) => {
+                    return {
+                        ...auction,
+                        englishAuctionType: 'COLLATERAL',
+                        sellToken: 'PROTOCOL_TOKEN',
+                        buyToken: 'COIN',
+                        tokenSymbol: tokenSymbol,
+                        auctionDeadline: '1699122709',
+                    }
+                })
+                if (collateralAuctions && tokenSymbol) {
+                    const formmatedAuctions = formatCollateralAuctions(collateralAuctions, tokenSymbol)
+                    actions.setCollateralAuctions({
+                        collateral: tokenSymbol,
+                        auctions: [...loadedAuctions, ...formmatedAuctions],
+                    })
+                    actions.setLoadingAuctionsData({
+                        ...actions.loadingAuctionsData,
+                        collateralStartBlock: endBlock,
+                        loading: false,
+                    })
                 }
-            })
-            if (collateralAuctions && tokenSymbol) {
-                actions.setCollateralAuctions({ collateral: tokenSymbol, auctions: collateralAuctions })
             }
         }
-    }),
+    ),
     setSurplusAuctions: action((state, payload) => {
         state.surplusAuctions = payload
     }),
@@ -335,6 +371,13 @@ const auctionModel: AuctionModel = {
     fetchCollateralData: thunk(async (state, { geb, collateral, auctionIds }) => {
         const fetched = await fetchCollateralAuctionData(geb, collateral, auctionIds)
         state.setCollateralData(fetched)
+    }),
+
+    loadingAuctionsData: {
+        loading: false,
+    },
+    setLoadingAuctionsData: action((state, payload) => {
+        state.loadingAuctionsData = { ...state.loadingAuctionsData, ...payload }
     }),
 }
 
