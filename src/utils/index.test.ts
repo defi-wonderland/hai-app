@@ -1,9 +1,7 @@
 import {
-    formatNumber,
     getCollateralRatio,
     getEtherscanLink,
     getLiquidationPrice,
-    isAddress,
     ratioChecker,
     returnTotalValue,
     safeIsSafe,
