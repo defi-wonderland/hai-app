@@ -34,7 +34,7 @@ export const formatSurplusAndDebtAuctions = (auctionsList: SDKAuction[], userPro
                 biddersList && biddersList.length > 0 ? biddersList.reverse()[0].bidder : ''
             )
 
-            let sellInitialAmount = _.get(auc, 'amount', '0')
+            const sellInitialAmount = _.get(auc, 'amount', '0')
             const startedBy = _.get(auc, 'startedBy', '')
             const isClaimed = _.get(auc, 'isClaimed', false)
             const buyToken = _.get(auc, 'buyToken', 'PROTOCOL_TOKEN')
@@ -150,7 +150,7 @@ export const formatCollateralAuctions = (auctionsList: any[], tokenSymbol: strin
                 BigNumber.from(amountToRaise),
                 floatsTypes.WAD - floatsTypes.RAD
             )
-            let remainingToRaiseE18Raw = amountToRaiseE18.sub(raised).toString()
+            const remainingToRaiseE18Raw = amountToRaiseE18.sub(raised).toString()
 
             const remainingToRaiseE18 = remainingToRaiseE18Raw > '0' ? remainingToRaiseE18Raw : '0'
 
