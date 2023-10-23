@@ -21,6 +21,9 @@ import {
     getSurplusAuctions,
     formatSurplusAndDebtAuctions,
     formatCollateralAuctions,
+    SURPLUS_BATCH_SIZE,
+    DEBT_BATCH_SIZE,
+    COLLATERAL_BATCH_SIZE,
 } from '~/utils'
 import { IAuctionBid, IAuction, AuctionEventType, LoadingAuctionsData } from '~/types'
 import { StoreModel } from '~/model'
@@ -126,9 +129,12 @@ const auctionModel: AuctionModel = {
                 ...loadingAuctionsData,
                 loading: true,
             })
-            const blockAmount = 100000
             if (type === 'SURPLUS') {
-                const { auctions, endBlock } = await getSurplusAuctions(geb, latestBlock - blockAmount, latestBlock)
+                const { auctions, endBlock } = await getSurplusAuctions(
+                    geb,
+                    latestBlock - SURPLUS_BATCH_SIZE,
+                    latestBlock
+                )
                 const surplusAuctions = auctions.reverse().map((auction) => {
                     return {
                         ...auction,
@@ -146,7 +152,7 @@ const auctionModel: AuctionModel = {
                     })
                 }
             } else if (type === 'DEBT') {
-                const { auctions, endBlock } = await getDebtAuctions(geb, latestBlock - blockAmount, latestBlock)
+                const { auctions, endBlock } = await getDebtAuctions(geb, latestBlock - DEBT_BATCH_SIZE, latestBlock)
                 const debtAuctions = auctions.reverse().map((auction) => {
                     return {
                         ...auction,
@@ -167,7 +173,7 @@ const auctionModel: AuctionModel = {
                 const { auctions, endBlock } = await getCollateralAuctions(
                     geb,
                     tokenSymbol || 'WETH',
-                    latestBlock - blockAmount,
+                    latestBlock - 1000000,
                     latestBlock
                 )
 
