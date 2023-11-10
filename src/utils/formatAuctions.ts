@@ -137,10 +137,13 @@ export const formatCollateralAuctions = (auctionsList: any[], tokenSymbol: strin
             const startedBy = customLodash.get(colAuction, 'startedBy', '')
             // Amount to sell = collateral
             // Amout to raise = hai
-            const collateralBought = biddersList.reduce((acc, bid) => acc.add(bid.bid), BigNumber.from('0'))
+            const collateralBought = biddersList.reduce(
+                (accumulated, bid) => accumulated.add(bid.bid),
+                BigNumber.from('0')
+            )
             const remainingCollateral = BigNumber.from(amountToSell).sub(collateralBought).toString()
 
-            const raised = biddersList.reduce((acc, bid) => acc.add(bid.buyAmount), BigNumber.from('0'))
+            const raised = biddersList.reduce((accumulated, bid) => accumulated.add(bid.buyAmount), BigNumber.from('0'))
             const amountToRaiseE18 = gebUtils.decimalShift(
                 BigNumber.from(amountToRaise),
                 floatsTypes.WAD - floatsTypes.RAD
