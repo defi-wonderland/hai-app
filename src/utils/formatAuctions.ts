@@ -12,31 +12,31 @@ export const formatSurplusAndDebtAuctions = (auctionsList: SDKAuction[], userPro
         }
 
         // show auctions less than one month old only
-        const filteredAuctions: IAuction[] = auctionsList.map((auc: SDKAuction) => {
-            const { auctionDeadline, createdAt, initialBid, createdAtTransaction, biddersList, auctionId } = auc
+        const filteredAuctions: IAuction[] = auctionsList.map((auction: SDKAuction) => {
+            const { auctionDeadline, createdAt, initialBid, createdAtTransaction, biddersList, auctionId } = auction
 
             // if auction is settled, winner is the last bidder
             const winner = customLodash.get(
-                auc,
+                auction,
                 'winner',
                 // winner === currentWinner
                 // so we set the last bidder as currentWinner
                 biddersList && biddersList.length > 0 ? biddersList.reverse()[0].bidder : ''
             )
 
-            const sellInitialAmount = customLodash.get(auc, 'amount', '0')
-            const startedBy = customLodash.get(auc, 'startedBy', '')
-            const isClaimed = customLodash.get(auc, 'isClaimed', false)
-            const buyToken = customLodash.get(auc, 'buyToken', 'PROTOCOL_TOKEN')
-            const sellToken = customLodash.get(auc, 'sellToken', 'COIN')
-            const englishAuctionType: AuctionEventType = customLodash.get(auc, 'englishAuctionType', 'SURPLUS')
-            const englishAuctionConfiguration = customLodash.get(auc, 'englishAuctionConfiguration', {
+            const sellInitialAmount = customLodash.get(auction, 'amount', '0')
+            const startedBy = customLodash.get(auction, 'startedBy', '')
+            const isClaimed = customLodash.get(auction, 'isClaimed', false)
+            const buyToken = customLodash.get(auction, 'buyToken', 'PROTOCOL_TOKEN')
+            const sellToken = customLodash.get(auction, 'sellToken', 'COIN')
+            const englishAuctionType: AuctionEventType = customLodash.get(auction, 'englishAuctionType', 'SURPLUS')
+            const englishAuctionConfiguration = customLodash.get(auction, 'englishAuctionConfiguration', {
                 bidDuration: '',
                 bidIncrease: '1',
                 totalAuctionLength: '',
                 DEBT_amountSoldIncrease: '1',
             })
-            const tokenSymbol = customLodash.get(auc, 'tokenSymbol', undefined)
+            const tokenSymbol = customLodash.get(auction, 'tokenSymbol', undefined)
 
             const buyDecimals = englishAuctionType === 'SURPLUS' ? 18 : 45
             const sellDecimals = englishAuctionType === 'SURPLUS' ? 45 : 18
