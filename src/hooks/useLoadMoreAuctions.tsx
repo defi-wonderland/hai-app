@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import _ from '~/utils/lodash'
+import customLodash from '~/utils/lodash'
 
 import Button from '~/components/Button'
 import { useStoreActions, useStoreState } from '~/store'
@@ -19,8 +19,8 @@ export const useLoadMoreAuctions = ({ auctions }: Props) => {
     const [numberOfAuctions, setNumberOfAuctions] = useState(NUMBER_OF_AUCTIONS_TO_SHOW)
     const { proxyAddress } = connectWalletState
     const { loadingAuctionsData } = auctionsState
-    const type = _.get(auctions?.[0], 'englishAuctionType', undefined)
-    const tokenSymbol = _.get(auctions?.[0], 'tokenSymbol', undefined)
+    const type = customLodash.get(auctions?.[0], 'englishAuctionType', undefined)
+    const tokenSymbol = customLodash.get(auctions?.[0], 'tokenSymbol', undefined)
 
     const hasAllAuctions = auctions?.filter((auction) => auction.auctionId === '1')[0]
     const hasMoreAuctions = auctions && auctions.length <= numberOfAuctions
