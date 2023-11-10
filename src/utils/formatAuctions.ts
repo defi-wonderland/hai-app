@@ -1,7 +1,7 @@
 import { BigNumber, utils } from 'ethers'
 import { ISurplusAuction as SDKAuction, ICollateralAuction, utils as gebUtils } from '@hai-on-op/sdk'
 
-import _ from '~/utils/lodash'
+import customLodash from '~/utils/lodash'
 import { AuctionEventType, IAuction, IAuctionBidder } from '~/types'
 import { floatsTypes } from './constants'
 
@@ -26,7 +26,7 @@ export const formatSurplusAndDebtAuctions = (auctionsList: SDKAuction[], userPro
             } = auc
 
             // if auction is settled, winner is the last bidder
-            const winner = _.get(
+            const winner = customLodash.get(
                 auc,
                 'winner',
                 // winner === currentWinner
@@ -34,19 +34,19 @@ export const formatSurplusAndDebtAuctions = (auctionsList: SDKAuction[], userPro
                 biddersList && biddersList.length > 0 ? biddersList.reverse()[0].bidder : ''
             )
 
-            const sellInitialAmount = _.get(auc, 'amount', '0')
-            const startedBy = _.get(auc, 'startedBy', '')
-            const isClaimed = _.get(auc, 'isClaimed', false)
-            const buyToken = _.get(auc, 'buyToken', 'PROTOCOL_TOKEN')
-            const sellToken = _.get(auc, 'sellToken', 'COIN')
-            const englishAuctionType: AuctionEventType = _.get(auc, 'englishAuctionType', 'SURPLUS')
-            const englishAuctionConfiguration = _.get(auc, 'englishAuctionConfiguration', {
+            const sellInitialAmount = customLodash.get(auc, 'amount', '0')
+            const startedBy = customLodash.get(auc, 'startedBy', '')
+            const isClaimed = customLodash.get(auc, 'isClaimed', false)
+            const buyToken = customLodash.get(auc, 'buyToken', 'PROTOCOL_TOKEN')
+            const sellToken = customLodash.get(auc, 'sellToken', 'COIN')
+            const englishAuctionType: AuctionEventType = customLodash.get(auc, 'englishAuctionType', 'SURPLUS')
+            const englishAuctionConfiguration = customLodash.get(auc, 'englishAuctionConfiguration', {
                 bidDuration: '',
                 bidIncrease: '1',
                 totalAuctionLength: '',
                 DEBT_amountSoldIncrease: '1',
             })
-            const tokenSymbol = _.get(auc, 'tokenSymbol', undefined)
+            const tokenSymbol = customLodash.get(auc, 'tokenSymbol', undefined)
 
             const buyDecimals = englishAuctionType === 'SURPLUS' ? 18 : 45
             const sellDecimals = englishAuctionType === 'SURPLUS' ? 45 : 18
@@ -139,7 +139,7 @@ export const formatCollateralAuctions = (auctionsList: any[], tokenSymbol: strin
         const filteredAuctions = auctionsList.map((auc: ICollateralAuction, index) => {
             const { createdAt, createdAtTransaction, amountToSell, amountToRaise, biddersList } = auc
 
-            const startedBy = _.get(auc, 'startedBy', '')
+            const startedBy = customLodash.get(auc, 'startedBy', '')
             // Amount to sell = collateral
             // Amout to raise = hai
             const collateralBought = biddersList.reduce((acc, bid) => acc.add(bid.bid), BigNumber.from('0'))
