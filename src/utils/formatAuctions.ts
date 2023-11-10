@@ -12,18 +12,8 @@ export const formatSurplusAndDebtAuctions = (auctionsList: SDKAuction[], userPro
         }
 
         // show auctions less than one month old only
-        // const oneMonthOld = new Date().setMonth(new Date().getMonth() - 1)
         const filteredAuctions: IAuction[] = auctionsList.map((auc: SDKAuction) => {
-            const {
-                // isClaimed,
-                auctionDeadline,
-                // startedBy,
-                createdAt,
-                initialBid,
-                createdAtTransaction,
-                biddersList,
-                auctionId,
-            } = auc
+            const { auctionDeadline, createdAt, initialBid, createdAtTransaction, biddersList, auctionId } = auc
 
             // if auction is settled, winner is the last bidder
             const winner = customLodash.get(
