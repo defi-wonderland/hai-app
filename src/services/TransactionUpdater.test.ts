@@ -16,6 +16,7 @@ describe('transactions updater', () => {
                 })
             ).toEqual(true)
         })
+
         it('returns false if checked in last 3 blocks and greater than 20 minutes old', () => {
             expect(
                 shouldCheck(10, {
