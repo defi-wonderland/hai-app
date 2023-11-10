@@ -12,31 +12,36 @@ export const formatSurplusAndDebtAuctions = (auctionsList: SDKAuction[], userPro
         }
 
         // show auctions less than one month old only
-        const filteredAuctions: IAuction[] = auctionsList.map((auction: SDKAuction) => {
-            const { auctionDeadline, createdAt, initialBid, createdAtTransaction, biddersList, auctionId } = auction
+        const filteredAuctions: IAuction[] = auctionsList.map((surplusAndDebtAuction: SDKAuction) => {
+            const { auctionDeadline, createdAt, initialBid, createdAtTransaction, biddersList, auctionId } =
+                surplusAndDebtAuction
 
             // if auction is settled, winner is the last bidder
             const winner = customLodash.get(
-                auction,
+                surplusAndDebtAuction,
                 'winner',
                 // winner === currentWinner
                 // so we set the last bidder as currentWinner
                 biddersList && biddersList.length > 0 ? biddersList.reverse()[0].bidder : ''
             )
 
-            const sellInitialAmount = customLodash.get(auction, 'amount', '0')
-            const startedBy = customLodash.get(auction, 'startedBy', '')
-            const isClaimed = customLodash.get(auction, 'isClaimed', false)
-            const buyToken = customLodash.get(auction, 'buyToken', 'PROTOCOL_TOKEN')
-            const sellToken = customLodash.get(auction, 'sellToken', 'COIN')
-            const englishAuctionType: AuctionEventType = customLodash.get(auction, 'englishAuctionType', 'SURPLUS')
-            const englishAuctionConfiguration = customLodash.get(auction, 'englishAuctionConfiguration', {
+            const sellInitialAmount = customLodash.get(surplusAndDebtAuction, 'amount', '0')
+            const startedBy = customLodash.get(surplusAndDebtAuction, 'startedBy', '')
+            const isClaimed = customLodash.get(surplusAndDebtAuction, 'isClaimed', false)
+            const buyToken = customLodash.get(surplusAndDebtAuction, 'buyToken', 'PROTOCOL_TOKEN')
+            const sellToken = customLodash.get(surplusAndDebtAuction, 'sellToken', 'COIN')
+            const englishAuctionType: AuctionEventType = customLodash.get(
+                surplusAndDebtAuction,
+                'englishAuctionType',
+                'SURPLUS'
+            )
+            const englishAuctionConfiguration = customLodash.get(surplusAndDebtAuction, 'englishAuctionConfiguration', {
                 bidDuration: '',
                 bidIncrease: '1',
                 totalAuctionLength: '',
                 DEBT_amountSoldIncrease: '1',
             })
-            const tokenSymbol = customLodash.get(auction, 'tokenSymbol', undefined)
+            const tokenSymbol = customLodash.get(surplusAndDebtAuction, 'tokenSymbol', undefined)
 
             const buyDecimals = englishAuctionType === 'SURPLUS' ? 18 : 45
             const sellDecimals = englishAuctionType === 'SURPLUS' ? 45 : 18
@@ -126,10 +131,10 @@ export const formatCollateralAuctions = (auctionsList: any[], tokenSymbol: strin
             return []
         }
 
-        const filteredAuctions = auctionsList.map((auc: ICollateralAuction, index) => {
-            const { createdAt, createdAtTransaction, amountToSell, amountToRaise, biddersList } = auc
+        const filteredAuctions = auctionsList.map((colAuction: ICollateralAuction, index) => {
+            const { createdAt, createdAtTransaction, amountToSell, amountToRaise, biddersList } = colAuction
 
-            const startedBy = customLodash.get(auc, 'startedBy', '')
+            const startedBy = customLodash.get(colAuction, 'startedBy', '')
             // Amount to sell = collateral
             // Amout to raise = hai
             const collateralBought = biddersList.reduce((acc, bid) => acc.add(bid.bid), BigNumber.from('0'))
@@ -155,7 +160,7 @@ export const formatCollateralAuctions = (auctionsList: any[], tokenSymbol: strin
             const initialBids = [...[kickBidder], ...biddersList]
 
             return {
-                ...auc,
+                ...colAuction,
                 biddersList: initialBids.reverse(),
                 startedBy,
                 remainingToRaiseE18,
