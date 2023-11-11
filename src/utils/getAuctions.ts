@@ -26,7 +26,7 @@ async function fetchAuctions(
     const auctionsFetched = await fetchFunction(startBlock, endBlock)
     const totalAuctions = accumulatedAuctions.concat(auctionsFetched.auctions)
 
-    if (totalAuctions.length || endBlock <= startBlock) {
+    if (totalAuctions.length) {
         return { auctions: totalAuctions, endBlock: startBlock - 1 }
     } else {
         return fetchAuctions(fetchFunction, startBlock - blockAmount, startBlock - 1, blockAmount, totalAuctions)
