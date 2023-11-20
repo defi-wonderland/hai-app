@@ -10,7 +10,7 @@ const abi = ['function drop() public view returns ()']
 export const claimAirdrop = async (signer: JsonRpcSigner) => {
     if (!signer) return
 
-    const airdropContract = new ethers.Contract('0xe0C9Aa561D89ba60F0F9458C7E81eB30a7d8d6a3', abi, signer)
+    const airdropContract = new ethers.Contract('0xebd7e2A812Ab9EFD984c14c4539e080268703151', abi, signer)
 
     const txData = await airdropContract.populateTransaction.drop()
 
