@@ -1056,7 +1056,11 @@
 
 "@hai-on-op/abis@0.1.2":
   version "0.1.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@hai-on-op/abis/-/abis-0.1.2.tgz#eb9f78b6f2ea1929a96b8817f2b4ed4d6c3fe4fe"
+=======
+  resolved "https://registry.npmjs.org/@hai-on-op/abis/-/abis-0.1.2.tgz#eb9f78b6f2ea1929a96b8817f2b4ed4d6c3fe4fe"
+>>>>>>> 81c4abc4a7d6cc805df2f653aa0b8488f94c44ce
   integrity sha512-i43YZHD4BFmywaepnvYMrWCDVxiEkBJH9PctXhaNAp27w93AqsyGaiesXuxu1TCFq3MTMP8XdFAh3ReWbVNc/w==
   dependencies:
     "@defi-wonderland/solidity-utils" "0.0.0-4298c6c6"
@@ -1071,10 +1075,17 @@
     forge-std "https://github.com/foundry-rs/forge-std.git#e8a047e3f40f13fa37af6fe14e6e06283d9a060e"
     typechain "^8.3.1"
 
+<<<<<<< HEAD
 "@hai-on-op/sdk@1.2.2-d56333c0.0":
   version "1.2.2-d56333c0.0"
   resolved "https://registry.yarnpkg.com/@hai-on-op/sdk/-/sdk-1.2.2-d56333c0.0.tgz#44a848c94475cbdbb876d8b36a2e0ca01ba01066"
   integrity sha512-xG/ADiVCqqGwRNPB1PmmVec/bCwPqG9gPZgC3lN+37nKKui0rg9JALSAwq0Yv+muZJqLn0jduXgaEeV9RMZGPw==
+=======
+"@hai-on-op/sdk@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/@hai-on-op/sdk/-/sdk-1.2.1.tgz#ffd70955ab7489b292a9c0ee8254b779f600f63e"
+  integrity sha512-sdnqjfOJTSiXnck74uhhOOU04nqXtEIJmJr+D+YypJYNX8SzN4GQGmPkRQdza4GkpHFnXSM8cE2uajzabw+nWw==
+>>>>>>> 81c4abc4a7d6cc805df2f653aa0b8488f94c44ce
   dependencies:
     "@hai-on-op/abis" "0.1.2"
     ethers "5.4.7"
@@ -1731,7 +1742,11 @@
 
 "@typechain/ethers-v6@^0.5.0":
   version "0.5.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@typechain/ethers-v6/-/ethers-v6-0.5.1.tgz#42fe214a19a8b687086c93189b301e2b878797ea"
+=======
+  resolved "https://registry.npmjs.org/@typechain/ethers-v6/-/ethers-v6-0.5.1.tgz#42fe214a19a8b687086c93189b301e2b878797ea"
+>>>>>>> 81c4abc4a7d6cc805df2f653aa0b8488f94c44ce
   integrity sha512-F+GklO8jBWlsaVV+9oHaPh5NJdd6rAKN4tklGfInX1Q7h0xPgVLP39Jl3eCulPB5qexI71ZFHwbljx4ZXNfouA==
   dependencies:
     lodash "^4.17.15"
@@ -1739,7 +1754,11 @@
 
 "@typechain/web3-v1@^6.0.6":
   version "6.0.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@typechain/web3-v1/-/web3-v1-6.0.7.tgz#7da0b3bcdb16a173b73f9e3c9d5a47daffe65138"
+=======
+  resolved "https://registry.npmjs.org/@typechain/web3-v1/-/web3-v1-6.0.7.tgz#7da0b3bcdb16a173b73f9e3c9d5a47daffe65138"
+>>>>>>> 81c4abc4a7d6cc805df2f653aa0b8488f94c44ce
   integrity sha512-HWkGplyPL3eWiP0sszqKZh6Bjrdm23srtirUdKp/4BEWKp/o6zofLt8lDn468bRQlQdHaobrbfEeT+3gf/r4eg==
   dependencies:
     lodash "^4.17.15"
@@ -4384,8 +4403,13 @@ for-each@^0.3.3:
     is-callable "^1.1.3"
 
 "forge-std@https://github.com/foundry-rs/forge-std":
+<<<<<<< HEAD
   version "1.7.3"
   resolved "https://github.com/foundry-rs/forge-std#2f112697506eab12d433a65fdc31a639548fe365"
+=======
+  version "1.7.1"
+  resolved "https://github.com/foundry-rs/forge-std#f73c73d2018eb6a111f35e4dae7b4f27401e9421"
+>>>>>>> 81c4abc4a7d6cc805df2f653aa0b8488f94c44ce
 
 "forge-std@https://github.com/foundry-rs/forge-std.git#e8a047e3f40f13fa37af6fe14e6e06283d9a060e":
   version "1.5.6"
@@ -7444,7 +7468,11 @@ type-fest@^0.21.3:
 
 typechain@^8.3.1:
   version "8.3.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/typechain/-/typechain-8.3.2.tgz#1090dd8d9c57b6ef2aed3640a516bdbf01b00d73"
+=======
+  resolved "https://registry.npmjs.org/typechain/-/typechain-8.3.2.tgz#1090dd8d9c57b6ef2aed3640a516bdbf01b00d73"
+>>>>>>> 81c4abc4a7d6cc805df2f653aa0b8488f94c44ce
   integrity sha512-x/sQYr5w9K7yv3es7jo4KTX05CLxOf7TRWwoHlrjRh8H82G64g+k7VuWPJlgMo6qrjfCulOdfBjiaDtmhFYD/Q==
   dependencies:
     "@types/prettier" "^2.1.1"
