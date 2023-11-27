@@ -9,7 +9,6 @@ export interface ConnectWalletModel {
     tokensFetchedData: { [token: string]: TokenFetchData }
     blockNumber: IBlockNumber
     fiatPrice: number
-    flxPrice: number
     step: number
     ethPriceChange: number
     proxyAddress: string
@@ -19,13 +18,11 @@ export interface ConnectWalletModel {
     ethBalance: ITokenBalance
     haiBalance: ITokenBalance
     uniswapPoolBalance: ITokenBalance
-    claimableFLX: string
     isWrongNetwork: boolean
     isStepLoading: boolean
     fetchFiatPrice: Thunk<ConnectWalletModel>
     fetchTokenData: Thunk<ConnectWalletModel, IFetchTokensDataPayload>
     setFiatPrice: Action<ConnectWalletModel, number>
-    setFlxPrice: Action<ConnectWalletModel, number>
     setIsWrongNetwork: Action<ConnectWalletModel, boolean>
     updateBlockNumber: Action<ConnectWalletModel, { chainId: number; blockNumber: number }>
     updateEthBalance: Action<ConnectWalletModel, { chainId: number; balance: number }>
@@ -38,7 +35,6 @@ export interface ConnectWalletModel {
     setIsStepLoading: Action<ConnectWalletModel, boolean>
     setCtHash: Action<ConnectWalletModel, string>
     setEthPriceChange: Action<ConnectWalletModel, number>
-    setClaimableFLX: Action<ConnectWalletModel, string>
     setTokensData: Action<ConnectWalletModel, { [token: string]: TokenData }>
     setTokensFetchedData: Action<ConnectWalletModel, { [token: string]: TokenFetchData }>
     setForceUpdateTokens: Action<ConnectWalletModel, boolean>
@@ -56,9 +52,7 @@ const connectWalletModel: ConnectWalletModel = {
     uniswapPoolBalance: { 1: '0', 10: '0', 420: '0' },
     tokensData: {},
     tokensFetchedData: {},
-    claimableFLX: '0',
     fiatPrice: 0,
-    flxPrice: 0,
     ethPriceChange: 0,
     step: 0,
     proxyAddress: '',
@@ -87,9 +81,6 @@ const connectWalletModel: ConnectWalletModel = {
     }),
     setFiatPrice: action((state, payload) => {
         state.fiatPrice = payload
-    }),
-    setFlxPrice: action((state, payload) => {
-        state.flxPrice = payload
     }),
     setIsWrongNetwork: action((state, payload) => {
         state.isWrongNetwork = payload
@@ -140,9 +131,6 @@ const connectWalletModel: ConnectWalletModel = {
     }),
     setEthPriceChange: action((state, payload) => {
         state.ethPriceChange = payload
-    }),
-    setClaimableFLX: action((state, payload) => {
-        state.claimableFLX = payload
     }),
     setTokensData: action((state, payload) => {
         state.tokensData = payload
