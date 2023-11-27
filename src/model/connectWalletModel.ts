@@ -51,9 +51,9 @@ const blockNumberState = localStorage.getItem('blockNumber')
 const connectWalletModel: ConnectWalletModel = {
     forceUpdateTokens: true,
     blockNumber: blockNumberState ? JSON.parse(blockNumberState) : {},
-    ethBalance: { 1: 0, 42: 0, 420: 0 },
-    haiBalance: { 1: '0', 42: '0', 420: '0' },
-    uniswapPoolBalance: { 1: '0', 42: '0', 420: '0' },
+    ethBalance: { 1: 0, 10: 0, 420: 0 },
+    haiBalance: { 1: '0', 10: '0', 420: '0' },
+    uniswapPoolBalance: { 1: '0', 10: '0', 420: '0' },
     tokensData: {},
     tokensFetchedData: {},
     claimableFLX: '0',
