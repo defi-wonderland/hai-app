@@ -9,7 +9,7 @@ export const {
     VITE_TESTNET_PUBLIC_RPC,
 } = import.meta.env
 
-export const DEFAULT_NETWORK_ID = 10
+export const DEFAULT_NETWORK_ID = 11155420
 
 export const getNetworkName = (chainId: number) => {
     switch (chainId) {
